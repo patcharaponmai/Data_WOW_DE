@@ -14,26 +14,20 @@ Usable Data Pipeline:
 Database Design Diagram:
 * A diagram illustrating the design of the PostgreSQL database schema. This helps others understand the structure of the data being loaded.
 
+## Before You Begin
+Before begin the project please explore a following website:
+* Apache Airflow - Go through [Apache Airflow]([http://mongodb.org/](https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html)), which should help you understand how to setup docker airflow.
 
-## Material
->1. Challenge instruction - [Shared] Data Engineer _ Data Platform Engineer Test (Hands-on).docx
->2. Source file
->>1. order_detail.csv
->>2. restaurant_detail.csv
->3. Source code
->>1. Lineman_test.ipynb (Main Script)
->>2. mapper.py, reducer.py (For build map reducer in HADOOP)
+## Prerequisites
+Make sure you have installed all of the following prerequisites on your development machine:
+* Git - [Download & Install Git](https://git-scm.com/downloads). OSX and Linux machines typically have this already installed.
+* Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager. If you encounter any problems, you can also use this [GitHub Gist](https://gist.github.com/isaacs/579814) to install Node.js.
+* MongoDB - [Download & Install MongoDB](http://www.mongodb.org/downloads), and make sure it's running on the default port (27017).
+* Bower - You're going to use the [Bower Package Manager](http://bower.io/) to manage your front-end packages. Make sure you've installed Node.js and npm first, then install bower globally using npm:
 
-## Accessing the Source Code
-
-You can access the source code and see a result of this project in the [GitHub Repository](https://github.com/patcharaponmai/Lineman_Senior_Data_Engineer.git).
-
-## Requirement library
->1. Pandas
->2. Psycopg2
->3. os
->4. findspark
->5. pyspark
+```bash
+$ npm install -g bower
+```
 
 ## Installation
 
