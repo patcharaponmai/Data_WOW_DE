@@ -3,7 +3,7 @@
 ## Introduction
 This project focuses on building an ETL (Extract, Transform, Load) process using Apache Airflow for orchestrating data pipelines and ingesting data into a PostgreSQL database.
 
-## The project comprises three primary objectives:
+## The project comprises four primary objectives:
 
 Docker-Compose:
 * The project should include Docker Compose configurations for running orchestrating pipeline tools such as Airflow/Mage.ai/Kubeflow/MLflow
