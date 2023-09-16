@@ -20,8 +20,8 @@ Efficient Data Pipeline:
 Database Design Diagram:
 * Included in this repository is a database design diagram that visually represents the structure and relationships within the PostgreSQL schema. This diagram serves as a helpful reference for understanding the data organization.
 
-## Before You Begin
-Before begin the project please explore a following website:
+## Before bigon the project
+Please explore a following website:
 * Apache Airflow - Go through [Apache Airflow](https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html), which should help you understand how to setup docker airflow.
 
 ## Prerequisites
