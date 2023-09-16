@@ -64,6 +64,15 @@ In the container, certain directories are mounted, allowing their contents to st
 
 * ./plugins - You can put your custom plugins here.
 
+## Modify docker-compose.yaml
 
+Modify the docker-compose.yaml file by including 
+
+```bash
+${AIRFLOW_PROJ_DIR:-.}/data_sample:/opt/airflow/data_sample 
+```
+in the volume variable. This change is necessary to set up the source file path with the 'data_sample' folder created during the Prerequisites step. The result after modifed is shown in figure below.
+
+<img width="617" alt="Screen Shot 2566-09-16 at 14 57 44" src="https://github.com/patcharaponmai/Data_wow_DE/assets/140698887/2d3a812b-9908-45c7-919a-c8e310f4ab8e">
 
 
