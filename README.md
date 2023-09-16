@@ -6,6 +6,9 @@ There are three main assignments
 
 Docker-Compose:
 * The project should include Docker Compose configurations for running orchestrating pipeline tools such as Airflow/Mage.ai/Kubeflow/MLflow
+
+  > **In this project I use Airflow as an orchestrator pipeline tools**.
+
 * Database must be PostgreSQL run as a container.
 
 Usable Data Pipeline:
@@ -16,7 +19,7 @@ Database Design Diagram:
 
 ## Before You Begin
 Before begin the project please explore a following website:
-* Apache Airflow - Go through [Apache Airflow]([http://mongodb.org/](https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html)), which should help you understand how to setup docker airflow.
+* Apache Airflow - Go through [Apache Airflow](https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html), which should help you understand how to setup docker airflow.
 
 ## Prerequisites
 Make sure you have installed all of the following prerequisites on your development machine:
