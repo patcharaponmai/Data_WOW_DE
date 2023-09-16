@@ -91,9 +91,12 @@ Regardless of your operating system, you must execute database migrations and es
 ```bash
 docker-compose up airflow-init
 ```
-After execute command above you will get as following figure.
+When the execute command done you will get as following figure.
 
 <img width="915" alt="Screen Shot 2566-09-16 at 15 20 38" src="https://github.com/patcharaponmai/Data_wow_DE/assets/140698887/1013f4e2-181b-4799-820a-66feecf6d742">
+
+
+After completing this process, you will have a default account with the username `airflow` and password `airflow` to log in via the Apache Airflow UI.
 
 
 ## Start service
@@ -103,3 +106,19 @@ Execute `docker-compose up` to initiate all the services within our Docker envir
 ```bash
 docker-compose up
 ```
+
+## Access Apache Airflow UI
+
+The webserver is available at:
+
+```
+http://localhost:8080
+```
+
+<img width="1302" alt="Screen Shot 2566-09-16 at 15 30 09" src="https://github.com/patcharaponmai/Data_wow_DE/assets/140698887/a39a6f29-996b-4b7d-ae2d-174a7cfbe632">
+
+
+## Before trigger DAG process
+
+We need to build a connection with Postgres database by complete following step.
+
