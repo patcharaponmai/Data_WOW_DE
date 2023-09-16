@@ -65,7 +65,7 @@ In the container, certain directories are mounted, allowing their contents to st
 
 ## Modify docker-compose.yaml
 
-Modify the docker-compose.yaml file by including in the volume variable. 
+Modify the docker-compose.yaml file by including below command in the volume variable. 
 
 ```
 ${AIRFLOW_PROJ_DIR:-.}/data_sample:/opt/airflow/data_sample 
