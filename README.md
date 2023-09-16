@@ -148,9 +148,18 @@ Click `save` to save the configuration.
 
 ## Trigger DAG process
 
-Return to the Apache Airflow UI homepage. In the `DAG` column, locate the DAG named `ETL_process`, as specified in the main script.
+Return to the Apache Airflow UI homepage. In the `DAG` column, locate the DAG named `ETL_process`, as specified in the main script.  
 
 
-<img width="1440" alt="Screen Shot 2566-09-16 at 15 50 58" src="https://github.com/patcharaponmai/Data_wow_DE/assets/140698887/39cbbdba-6915-40da-9f25-7ed1fad7129f">
+<img width="1440" alt="Screen Shot 2566-09-16 at 15 50 58" src="https://github.com/patcharaponmai/Data_wow_DE/assets/140698887/39cbbdba-6915-40da-9f25-7ed1fad7129f">  
 
 
+After access to our DAG:ETL_process, you will see the flow in project my select `Graph` under `DAG:ETL_process`
+
+
+<img width="1440" alt="Screen Shot 2566-09-16 at 15 57 36" src="https://github.com/patcharaponmai/Data_wow_DE/assets/140698887/921553e0-5fb0-4340-91e5-2e62e33136e9">
+
+Click the ▶️ (play) button in the top-right corner to trigger the DAG. When the left chart or graph processors are completely green, it means that our DAG process is complete!
+
+# 🎉 🎊  End project 🎉 🎊 
+==================================================
