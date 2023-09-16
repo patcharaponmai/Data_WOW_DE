@@ -48,11 +48,21 @@ Retrieve the docker-compose.yaml file to set up and run Apache Airflow within a 
 $ curl -LfO 'https://airflow.apache.org/docs/apache-airflow/2.7.1/docker-compose.yaml'
 ```
 
-Create directory for use in Apache Airflow
+Create a directory to be used with Apache Airflow.
 
 ```bash
-$ mkdir -p ./dags ./logs ./
+$ mkdir -p ./dags ./logs ./plugins ./config
 ```
+
+In the container, certain directories are mounted, allowing their contents to stay synchronized between your computer and the container.
+
+* ./dags - Contains DAG files and utility scripts.
+
+* ./logs - Stores logs from task execution and the scheduler.
+
+* ./config - You can add custom log parser or add airflow_local_settings.py to configure cluster policy.
+
+* ./plugins - You can put your custom plugins here.
 
 
 
