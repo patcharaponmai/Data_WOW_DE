@@ -1,21 +1,25 @@
 # Data_wow_DE
 
 ## Introduction
+This project is create a ETL process running on airflow and ingest data into Postgres database.
+This project focuses on building an ETL (Extract, Transform, Load) process using Apache Airflow for orchestrating data pipelines and ingesting data into a PostgreSQL database.
 
-There are three main assignments
+## The project comprises three primary objectives:
 
 Docker-Compose:
 * The project should include Docker Compose configurations for running orchestrating pipeline tools such as Airflow/Mage.ai/Kubeflow/MLflow
 
-  > **In this project I use Airflow as an orchestrator pipeline tools**.
+  > **For this project, I have chosen Airflow as the primary pipeline orchestrator.**.
 
-* Database must be PostgreSQL run as a container.
+Database Containerization:
 
-Usable Data Pipeline:
-* The data pipeline should be functional and capable of completing its tasks within 30 minutes. This implies efficient data processing and loading.
+* The database component of the project runs on PostgreSQL, which is encapsulated within a Docker container.
+
+Efficient Data Pipeline:
+* The data pipeline implemented in this project is designed for efficiency and is capable of completing its tasks within a 30-minute timeframe. This efficiency ensures optimal data processing and loading.
 
 Database Design Diagram:
-* A diagram illustrating the design of the PostgreSQL database schema. This helps others understand the structure of the data being loaded.
+* Included in this repository is a database design diagram that visually represents the structure and relationships within the PostgreSQL schema. This diagram serves as a helpful reference for understanding the data organization.
 
 ## Before You Begin
 Before begin the project please explore a following website:
