@@ -8,7 +8,7 @@ This project focuses on building an ETL (Extract, Transform, Load) process using
 Docker-Compose:
 * The project should include Docker Compose configurations for running orchestrating pipeline tools such as Airflow/Mage.ai/Kubeflow/MLflow
 
-  > **For this project, I have chosen Airflow as the primary pipeline orchestrator.**.
+  > **For this project, I have chosen Airflow as the primary pipeline orchestrator.**
 
 Database Containerization:
 
