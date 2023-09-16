@@ -1,7 +1,6 @@
 # Data_WOW_Data_Engineer
 
 ## Introduction
-This project is create a ETL process running on airflow and ingest data into Postgres database.
 This project focuses on building an ETL (Extract, Transform, Load) process using Apache Airflow for orchestrating data pipelines and ingesting data into a PostgreSQL database.
 
 ## The project comprises three primary objectives:
