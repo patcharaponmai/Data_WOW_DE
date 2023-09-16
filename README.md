@@ -34,98 +34,26 @@ $ pip3 install -r requirements.txt
 ```
 
 * sampledata_new.py - Python file to generate a sample parquet file use as a source file in this project.
+  > After complie this python file, folder name 'data_sample' that contain parquet file will created.
 
 ```bash
 $ python3 sampledata_new.py
 ```
 
-## Installation
+## Begin
 
->1. PostgreSQL Databsae
-```
-# install PostgreSQL
-!apt install postgresql postgresql-contrib &>log
+Retrieve the docker-compose.yaml file to set up and run Apache Airflow within a Docker environment.
 
-# start PostgreSQL serviecs
-!service postgresql start
-
-# Create root user
-!sudo -u postgres psql -c "CREATE USER root WITH SUPERUSER"
-
-# Create database
-!sudo -u postgres createdb challenge
+```bash
+$ curl -LfO 'https://airflow.apache.org/docs/apache-airflow/2.7.1/docker-compose.yaml'
 ```
 
->2. Pre-Requisites for HADOOP installation
-```
-# install java
-!apt-get install openjdk-8-jdk-headless -qq > /dev/null
+Create directory for use in Apache Airflow
 
-#create java home variable 
-import os
-os.environ["JAVA_HOME"] = "/usr/lib/jvm/java-8-openjdk-amd64"
-```
->3. HADOOP Installation
-```
-#download HADOOP (NEW DOWNLOAD LINK)
-!wget https://archive.apache.org/dist/hadoop/common/hadoop-3.3.0/hadoop-3.3.0.tar.gz
-
-#extract the file
-!tar -xzvf hadoop-3.3.0.tar.gz
-
-#copy the hadoop file to user/local
-!cp -r hadoop-3.3.0/ /usr/local/
-
-#find  the default Java path
-!readlink -f /usr/bin/java | sed "s:bin/java::"
-
-#run Hadoop
-!/usr/local/hadoop-3.3.0/bin/hadoop
-
-#create input folder for demonstration exercise
-!mkdir ~/testin
-
-#copy sample files to the input folder
-!cp /usr/local/hadoop-3.3.0/etc/hadoop/*.xml ~/testin
-
-#check that files have been successfully copied to the input folder
-!ls ~/testin
-
-#run the mapreduce example program
-!/usr/local/hadoop-3.3.0/bin/hadoop jar /usr/local/hadoop-3.3.0/share/hadoop/mapreduce/hadoop-mapreduce-examples-3.3.0.jar grep ~/testin ~/testout 'allowed[.]*'
-
-#download and extract 20 newsgroup dataset
-!wget http://qwone.com/~jason/20Newsgroups/20news-18828.tar.gz
-!tar -xzvf 20news-18828.tar.gz
-
-# This step require both python file put on working directory path
-!chmod u+rwx /content/mapper.py
-!chmod u+rwx /content/reducer.py
-
-!/usr/local/hadoop-3.3.0/bin/hadoop jar /usr/local/hadoop-3.3.0/share/hadoop/tools/lib/hadoop-streaming-3.3.0.jar -input /content/20news-18828/alt.atheism/49960 -output ~/tryout -file /content/mapper.py  -file /content/reducer.py  -mapper 'python mapper.py'  -reducer 'python reducer.py'
+```bash
+$ mkdir -p ./dags ./logs ./
 ```
 
->4. Pyspark installation
-```
-#download SPARK (NEW DOWNLOAD LINK)
-!wget -q http://apache.osuosl.org/spark/spark-3.3.3/spark-3.3.3-bin-hadoop3.tgz
 
-#extract the spark file to the current folder
-!tar xf spark-3.3.3-bin-hadoop3.tgz
 
-#create spark home variable 
-os.environ["SPARK_HOME"] = "/content/spark-3.3.3-bin-hadoop3"
 
-#install findspark
-#findspark searches pyspark installation on the server 
-#and adds pyspark installation path to sys.path at runtime 
-#so that pyspark modules can be imported
-
-!pip install -q findspark
-
-#import findspark
-import findspark
-findspark.init()
-
-!pip install pyspark
-```
