@@ -89,7 +89,7 @@ echo "POSTGRES_DB=airflow" > .env
 Regardless of your operating system, you must execute database migrations and establish the initial user account. To achieve this, execute the following command:
 
 ```bash
-docker-compose up airflow-init
+$ docker-compose up airflow-init
 ```
 When the execute command done you will get as following figure.
 
@@ -104,7 +104,7 @@ After completing this process, you will have a default account with the username
 Execute `docker-compose up` to initiate all the services within our Docker environment.
 
 ```bash
-docker-compose up
+$ docker-compose up
 ```
 
 ## Access Apache Airflow UI
