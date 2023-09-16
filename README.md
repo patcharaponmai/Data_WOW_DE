@@ -68,7 +68,7 @@ In the container, certain directories are mounted, allowing their contents to st
 
 Modify the docker-compose.yaml file by including in the volume variable. 
 
-```bash
+```
 ${AIRFLOW_PROJ_DIR:-.}/data_sample:/opt/airflow/data_sample 
 ```
 This change is necessary to set up the source file path with the 'data_sample' folder created during the Prerequisites step. The result after modifed is shown in figure below.
@@ -84,4 +84,22 @@ echo "POSTGRES_USER=airflow" > .env
 echo "POSTGRES_PASSWORD=airflow" > .env
 echo "POSTGRES_DB=airflow" > .env
 ```
+## Initialize database
 
+Regardless of your operating system, you must execute database migrations and establish the initial user account. To achieve this, execute the following command:
+
+```bash
+docker-compose up airflow-init
+```
+After execute command above you will get as following figure.
+
+<img width="915" alt="Screen Shot 2566-09-16 at 15 20 38" src="https://github.com/patcharaponmai/Data_wow_DE/assets/140698887/1013f4e2-181b-4799-820a-66feecf6d742">
+
+
+## Start service
+
+Execute `docker-compose up` to initiate all the services within our Docker environment.
+
+```bash
+docker-compose up
+```
