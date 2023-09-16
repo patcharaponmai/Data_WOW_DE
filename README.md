@@ -1,4 +1,4 @@
-# Data_WOW_DE
+# Data_WOW_Data_Engineer
 
 ## Introduction
 This project is create a ETL process running on airflow and ingest data into Postgres database.
