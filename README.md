@@ -77,6 +77,7 @@ This change is necessary to set up the source file path with the 'data_sample' f
 
 
 Save some variable value in file '.env'
+> POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB is a default value determine by docker-compose.yaml
 
 ```bash
 echo -e "AIRFLOW_UID=$(id -u)" > .env
@@ -120,5 +121,36 @@ http://localhost:8080
 
 ## Before trigger DAG process
 
-We need to build a connection with Postgres database by complete following step.
+We need to establish a connection with a PostgreSQL database, follow these steps:
+
+After login, click `Admin` > `Connections` 
+
+<img width="1427" alt="Screen Shot 2566-09-16 at 15 33 57" src="https://github.com/patcharaponmai/Data_wow_DE/assets/140698887/91b83646-17a2-4c9a-9113-3b966b59fc59">
+
+Then select ➕ button to create connection.
+
+<img width="613" alt="Screen Shot 2566-09-16 at 15 40 41" src="https://github.com/patcharaponmai/Data_wow_DE/assets/140698887/f22a9d14-da56-41b4-9e50-b635607e358c">
+
+
+* Connection Id - `postgres_default`
+
+* Connection Type - Search `Postgres` in drop down
+
+* Host - `postgres`
+
+* Schema - `airflow`
+
+* Login - `airflow`
+
+* Host - `5432`
+
+Click `save` to save the configuration.
+
+## Trigger DAG process
+
+Return to the Apache Airflow UI homepage. In the `DAG` column, locate the DAG named `ETL_process`, as specified in the main script.
+
+
+<img width="1440" alt="Screen Shot 2566-09-16 at 15 50 58" src="https://github.com/patcharaponmai/Data_wow_DE/assets/140698887/39cbbdba-6915-40da-9f25-7ed1fad7129f">
+
 
