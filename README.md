@@ -63,9 +63,9 @@ In the container, certain directories are mounted, allowing their contents to st
 
 * ./plugins - You can put your custom plugins here.
 
-## Modify docker-compose.yaml
+## Modify file
 
-Modify the docker-compose.yaml file by including below command in the volume variable. 
+Modify the `docker-compose.yaml` file by including below command in the volume variable. 
 
 ```
 ${AIRFLOW_PROJ_DIR:-.}/data_sample:/opt/airflow/data_sample 
@@ -75,15 +75,19 @@ This change is necessary to set up the source file path with the 'data_sample' f
 <img width="617" alt="Screen Shot 2566-09-16 at 14 57 44" src="https://github.com/patcharaponmai/Data_wow_DE/assets/140698887/2d3a812b-9908-45c7-919a-c8e310f4ab8e">
 
 
-Save some variable value in file '.env'
-> POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB is a default value determine by docker-compose.yaml
+Save some variable value in file `./.env`
 
 ```bash
 echo -e "AIRFLOW_UID=$(id -u)" > .env
-echo "POSTGRES_USER=airflow" > .env
-echo "POSTGRES_PASSWORD=airflow" > .env
-echo "POSTGRES_DB=airflow" > .env
 ```
+
+Create file `./config/airflow.cfg` and add following command in order to avoid heartbeat failed due to long task execution
+
+```bash
+[scheduler]
+scheduler_heartbeat_sec = 1800  # Increase this value to allow longer task execution
+```
+
 ## Initialize database
 
 Regardless of your operating system, you must execute database migrations and establish the initial user account. To achieve this, execute the following command:
