@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 from etl_function import ETL
 
-SOURCE_FILE_PATH = './data_sample/data_test' # For run all file change this path to './data_sample'
+SOURCE_FILE_PATH = './data_sample/data_test' # For run all file, change this path to './data_sample'
 TARGET_TABLE = 'test_tbl'
 COLUMNS = ['department_name', 'sensor_serial', 'create_at', 'product_name', 'product_expire']
 POSTGRES_CONN_ID = 'postgres_default'
