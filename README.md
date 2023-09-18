@@ -160,8 +160,7 @@ Return to the Apache Airflow UI homepage. In the `DAG` column, locate the DAG na
 
 After access to our DAG:ETL_process, you will see the flow in project my select `Graph` under `DAG:ETL_process`
 
-
-<img width="1440" alt="Screen Shot 2566-09-16 at 15 57 36" src="https://github.com/patcharaponmai/Data_wow_DE/assets/140698887/921553e0-5fb0-4340-91e5-2e62e33136e9">
+<img width="1440" alt="Apache Airflow Result" src="https://github.com/patcharaponmai/Data_WOW_DE/assets/140698887/2a5f7ee0-a513-44ff-8c3c-f50b197c648e">
 
 Click the ▶️ (play) button in the top-right corner to trigger the DAG. When the left chart or graph processors are completely green, it means that our DAG process is complete!
 
