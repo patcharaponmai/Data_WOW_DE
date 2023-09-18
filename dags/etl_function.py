@@ -29,8 +29,8 @@ class ETL:
         - source_file_path (str): The path to the source file location.
         - connection (str): The Airflow connection ID for the PostgreSQL database.
         - tgt_table (str): The name of the target table for data ingestion.
-        - BatchSize (int, optional): The size of batches for data insertion (default=1e4).
-        - last_date_for_loop (int, optional): The last date of source file that require to ingest (defaut=9).
+        - BatchSize (int, optional): The size of batches for data insertion (default=5e3 or 5000).
+        - last_date_for_loop (int, optional): The last date of source file that require to ingest (default=9).
     """
 
     self.df = pd.DataFrame()
