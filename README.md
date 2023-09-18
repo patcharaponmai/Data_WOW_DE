@@ -74,6 +74,7 @@ This change is necessary to set up the source file path with the 'data_sample' f
 
 <img width="617" alt="Screen Shot 2566-09-16 at 14 57 44" src="https://github.com/patcharaponmai/Data_wow_DE/assets/140698887/2d3a812b-9908-45c7-919a-c8e310f4ab8e">
 
+The additional modify is about `mem_limit` and `cpus` which can observe in the `docker-compose.yaml` in this repository.
 
 Save some variable value in file `./.env`
 
