@@ -226,6 +226,10 @@ class ETL:
   # Create a function for data ingestion.
   def load_data(self) -> None:
 
+    print("########################")
+    print("###### LOAD  DATA ######")
+    print("########################")
+
     for column_name in self.df.columns:
       self.column_names.append(f'"{column_name}"')
 
