@@ -19,15 +19,13 @@ default_args = {
     'start_date': datetime(2023, 9, 15),
     'email_on_failure': False,
     'email_on_retry': False,
-    'retry': 10,
 }
 
 dag = DAG(
     'ETL_process',
     default_args=default_args,
     description='ETL pipeline',
-    schedule_interval=None,
-    concurrency=30
+    schedule_interval=None
 )
 
 # Main function to execute ETL process

@@ -70,7 +70,7 @@ class ETL:
 
   @runtime
   # Create a function for extract data.
-  def extract_data(self, num_processes : int = 5):
+  def extract_data(self, num_processes : int = 20):
       """
       Extract file from source file.
 
