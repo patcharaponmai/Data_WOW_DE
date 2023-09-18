@@ -70,12 +70,12 @@ class ETL:
 
   @runtime
   # Create a function for extract data.
-  def extract_data(self, num_processes : int = 20):
+  def extract_data(self, num_processes : int = 10):
       """
       Extract file from source file.
 
       Parameters:
-          - num_processes (int): Maximum concurrent process.
+          - num_processes (int): Maximum concurrent process (default = 10).
       """
 
       print("########################")
