@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 from etl_function import ETL
 
-SOURCE_FILE_PATH = './data_sample/data_test'
+SOURCE_FILE_PATH = './data_sample/data_test' # For run all file change this path to './data_sample'
 TARGET_TABLE = 'test_tbl'
 COLUMNS = ['department_name', 'sensor_serial', 'create_at', 'product_name', 'product_expire']
 POSTGRES_CONN_ID = 'postgres_default'
@@ -19,7 +19,7 @@ default_args = {
     'start_date': datetime(2023, 9, 15),
     'email_on_failure': False,
     'email_on_retry': False,
-    'retry': 2,
+    'retry': 10,
 }
 
 dag = DAG(
@@ -108,7 +108,8 @@ create_table = PostgresOperator(
 etl_process = PythonOperator(
     task_id="etl_pipeline_ingestion",
     python_callable=etl_pipeline,
-    dag=dag
+    dag=dag,
+    execution_timeout=timedelta(seconds=3600),
 )
 
 # explore_data_task = PythonOperator(

@@ -5,7 +5,7 @@ import pyarrow.parquet as pq
 import time
 from datetime import datetime, timedelta
 from airflow.hooks.postgres_hook import PostgresHook
-from multiprocessing import Pool
+import concurrent.futures
 
 # Create decorator for compute runtime
 def runtime(func):
@@ -20,7 +20,7 @@ def runtime(func):
 
 class ETL:
 
-  def __init__(self, source_file_path : str, connection : str, tgt_table : str) -> None:
+  def __init__(self, source_file_path : str, connection : str, tgt_table : str, BatchSize : int = 5e3, last_date_for_loop : int = 9) -> None:
 
     """
     Initialize the ETL object.
@@ -29,6 +29,8 @@ class ETL:
         - source_file_path (str): The path to the source file location.
         - connection (str): The Airflow connection ID for the PostgreSQL database.
         - tgt_table (str): The name of the target table for data ingestion.
+        - BatchSize (int, optional): The size of batches for data insertion (default=1e4).
+        - last_date_for_loop (int, optional): The last date of source file that require to ingest (defaut=9).
     """
 
     self.df = pd.DataFrame()
@@ -36,8 +38,11 @@ class ETL:
     self.output_csv_path = f'{self.source_file_path}/output_csv' # Collect output csv file
     self.connection = connection
     self.tgt_table = tgt_table
+    self.BatchSize = int(BatchSize)
     self.column_names = [] # Collect list of table's column name
     self.list_total_rec = [] # Collect list of total record in each file
+    self.start_date = datetime(2023, 1, 1) # First date
+    self.last_date_for_loop = last_date_for_loop # Last date
 
   # Create a function for connecting to the PostgreSQL database.
   def create_connection_postgresql(self) -> None:
@@ -49,55 +54,66 @@ class ETL:
     except Exception as e:
       print("Error connecting to PostgreSQL:", e)
       return None
+    
+  @runtime
+  # Create a function for concat table after read parquet file
+  def read_and_concat_batch(self, batch_files : list):
+    """
+    Read parquet file and concat into single table.
+
+    Parameters:
+        - batch_files (list): List of batch parquet file for read in each time that this function called.
+    """
+          
+    batch_tables = [pq.read_table(os.path.join(self.source_file_path, file)) for file in batch_files]
+    return pa.concat_tables(batch_tables)
 
   @runtime
   # Create a function for extract data.
-  def extract_data(self):
+  def extract_data(self, num_processes : int = 5):
+      """
+      Extract file from source file.
 
-    print("########################")
-    print("##### EXTRACT DATA #####")
-    print("########################")
+      Parameters:
+          - num_processes (int): Maximum concurrent process.
+      """
 
-    print("Start extracting data ...")
-    print("Listing file in source file path ...")
+      print("########################")
+      print("##### EXTRACT DATA #####")
+      print("########################")
 
-    list_file = os.listdir(self.source_file_path)
+      print("Start extracting data ...")
+      print("Listing parquet files in source file path ...")
+      parquet_files = [file for file in os.listdir(self.source_file_path) if file.endswith('.parquet')]
+      num_files = len(parquet_files)
 
-    # List only parquet file in folder to aviod other file in case that folder contain various extension file
-    print("List parquet file ...")
-    parquet_files = [file for file in list_file if file.endswith('.parquet')]
+      merged_table = None
 
-    # Apply PyArrow library for handling large datasets using Arrow memory structures. 
-    print("Read parquet file as table ...")
-    tables = [pq.read_table(os.path.join(self.source_file_path, file)) for file in parquet_files]
+      with concurrent.futures.ThreadPoolExecutor(max_workers=num_processes) as executor:
 
-    # Combine Parquet files into a single dataset
-    print("Merge parquet file into a single dataset ...")
-    table = pa.concat_tables(tables)
+        for i in range(0, num_files, self.BatchSize ):
 
-    # Convert the combined PyArrow Table to a Pandas self.df
-    print("Convert to Pandas DataFrame ...")
-    self.df = table.to_pandas()
+          print(f"READ FILE STATUS ------ [{i}/{num_files}] ------")
+          
+          if i < num_files:
+            batch_file_slices = parquet_files[i:i + self.BatchSize ]
+          else:
+            i = i - self.BatchSize
+            batch_file_slices = parquet_files[i:num_files+1]
 
-    print(f'Complete extract data')
+          futures = [executor.submit(self.read_and_concat_batch, batch_file_slices)]
 
-    # +++++++++++++++++++++++++++++++++++++++++++
-    # print('Exlpore data ...')
-    # print("========================")
-    # print(f'Total row: {self.df.shape[0]}')
-    # print(f'Total column: {self.df.shape[1]}')
-    # print("========================")
+          for future in concurrent.futures.as_completed(futures):
 
-    # print('Show information of Dataframe')
-    # print("========================")
-    # print(self.df.info())
-    # print("========================")
+              batch_table = future.result()
+              if merged_table is None:
+                  merged_table = batch_table
+              else:
+                  merged_table = pa.concat_tables([merged_table, batch_table])
 
-    # print('Show example data')
-    # print("========================")
-    # print(self.df['create_at'].head(5))
-    # print("========================")
-    # +++++++++++++++++++++++++++++++++++++++++++
+      print("Converting to Pandas DataFrame ...")
+      self.df = merged_table.to_pandas()
+      print('Data extraction complete')
 
   @runtime
   # Create a function for transform data.
@@ -114,11 +130,49 @@ class ETL:
     print("Converting product_expire to Timestamp ...")
     self.df['product_expire'] = pd.to_datetime(self.df['product_expire'], format='%Y-%m-%d %H:%M:%S')
 
+    print("=======================================")
+    print(f"Create csv file from filtered data ...")
+    print("=======================================")
 
+    # Check if the directory exists
+    if not os.path.exists(self.output_csv_path):
+        
+        # If it doesn't exist, create the directory
+        os.makedirs(self.output_csv_path)
+        print(f"Directory '{self.output_csv_path}' created.")
+
+    else:
+        print(f"Directory '{self.output_csv_path}' already exists.")
+
+    end_date = int(self.last_date_for_loop)
+
+    for day in range(0, end_date): # Specfic date with in this range
+        
+        date = self.start_date + timedelta(days=day)
+        
+        # Format the current date as a string in 'YYYY-MM-DD' format
+        formatted_date = date.strftime('%Y-%m-%d')
+        file_csv = f"{self.output_csv_path}/data_date_{formatted_date}.csv"
+        
+        # Filter the DataFrame for the current date and assign it to the variable
+        filtered_data = self.df[self.df['create_at'].dt.date == date.date()]
+
+        # Collect list of total record in order to reconcile data 
+        self.list_total_rec.append(filtered_data.shape[0])
+
+        # Write output filtered_data into csv file
+        filtered_data.to_csv(file_csv, index=False) 
 
   @runtime
   # Create a function for reconcile data.
-  def reconcile_data(self, tgt_table, TOTAL_REC : int) -> None:
+  def reconcile_data(self, tgt_table : str, TOTAL_REC : int) -> None:
+    """
+    Reconcile data after loaded.
+
+    Parameters:
+        - tgt_table (str): Target table name.
+        - TOTAL_REC (int): Source file total record.
+    """
 
     print("########################")
     print("#### RECONCILE DATA ####")
@@ -172,74 +226,6 @@ class ETL:
   # Create a function for data ingestion.
   def load_data(self) -> None:
 
-    # Define the start and end dates of the range
-    start_date = datetime(2023, 1, 1)
-
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#
-
-    print("=======================================")
-    print(f"Create csv file from filtered data ...")
-    print("=======================================")
-
-    # Check if the directory exists
-    if not os.path.exists(self.output_csv_path):
-        
-        # If it doesn't exist, create the directory
-        os.makedirs(self.output_csv_path)
-        print(f"Directory '{self.output_csv_path}' created.")
-
-    else:
-        print(f"Directory '{self.output_csv_path}' already exists.")
-
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#  
-
-    for day in range(0, 8): # Specfic date with in this range
-        
-        date = start_date + timedelta(days=day)
-        
-        # Format the current date as a string in 'YYYY-MM-DD' format
-        formatted_date = date.strftime('%Y-%m-%d')
-        file_csv = f"{self.output_csv_path}/data_date_{formatted_date}.csv"
-        
-        # Filter the DataFrame for the current date and assign it to the variable
-        filtered_data = self.df[self.df['create_at'].dt.date == date.date()]
-
-        # Collect list of total record in order to reconcile data 
-        self.list_total_rec.append(filtered_data.shape[0])
-
-        # Write output filtered_data into csv file
-        filtered_data.to_csv(file_csv, index=False) 
-
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#  
-
-    # Specify the date range
-    date_range = [start_date + timedelta(days=day) for day in range(0, 8)]
-
-    # Create a list to store the filtered dataframes and total record counts
-    filtered_data_list = []
-
-    for date in date_range:
-        # Filter the DataFrame for the current date
-        filtered_data = self.df[self.df['create_at'].dt.date == date.date()]
-        
-        # Collect the total record count
-        total_records = filtered_data.shape[0]
-        self.list_total_rec.append(total_records)
-        
-        # Append the filtered data and total count to the list
-        filtered_data_list.append((date, total_records, filtered_data))
-
-    # Specify the directory to save CSV files
-    output_dir = self.output_csv_path
-
-    # Batch write the data to CSV files
-    for date, total_records, filtered_data in filtered_data_list:
-        formatted_date = date.strftime('%Y-%m-%d')
-        file_csv = f"{output_dir}/data_date_{formatted_date}.csv"
-        filtered_data.to_csv(file_csv, index=False)
-
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++#   
-
     for column_name in self.df.columns:
       self.column_names.append(f'"{column_name}"')
 
@@ -251,17 +237,15 @@ class ETL:
     print(f'{columns_str}')
     print("====================================")
     
-    print("============================================")
-    print(f"Create list of tuple contain data value ...")
-    print("============================================")
-
     try:
 
       pg_hook_load = PostgresHook(postgres_conn_id=self.connection)
 
-      for day in range(0, 8): # Specfic date with in this range
+      end_date = int(self.last_date_for_loop)
 
-        date = start_date + timedelta(days=day)
+      for day in range(0, end_date): # Specfic date with in this range
+
+        date = self.start_date + timedelta(days=day)
         
         # Format the current date as a string in 'YYYY-MM-DD' format
         formatted_date_str = date.strftime('%Y-%m-%d')
