@@ -102,6 +102,7 @@ services:
       retries: 5
       start_period: 5s
     restart: always
+    mem_limit: 8g
 
   redis:
     image: redis:latest
@@ -131,6 +132,9 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    mem_limit: 8g  # Increase memory limit
+    cpus: 4  # Increase CPU allocation
+      # Specify group_add to ensure GID 0
 
   airflow-scheduler:
     <<: *airflow-common
@@ -169,6 +173,7 @@ services:
       <<: *airflow-common-depends-on
       airflow-init:
         condition: service_completed_successfully
+    mem_limit: 8g
 
   airflow-triggerer:
     <<: *airflow-common
